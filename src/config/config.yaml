@@ -1,0 +1,81 @@
+# path to data and models are omitted
+
+seeds: 
+    repro_seed: 42
+    sampling_seed: 0
+    
+sweep_model:
+    model: 'deepset/gbert-base'
+    num_labels: 2
+    
+sweep_config_bayes:
+    method: bayes
+    metric:
+        name: eval/loss
+        goal: minimize
+    sweep_parameters: 
+        epochs: 
+            values: [1, 2, 3, 4]
+        downsampling: 
+            values: [True, False]
+        remove_footer:
+            values : [True, False]
+        remove_emojis:
+            values : [True, False]        
+        learning_rate:
+            distribution: 'log_uniform_values'
+            min: 0.00001
+            max: 0.01
+        batch_size: 
+            values: [8, 16, 32] 
+        weight_decay:
+            values: [0.0, 0.1, 0.2, 0.3]
+        attention_probs_dropout_prob: 
+            values: [0.0, 0.1, 0.3, 0.5]
+        hidden_dropout_prob:
+            values: [0.0, 0.1, 0.3, 0.5]
+    sweep_trainingargs:
+        save_strategy: 'epoch'
+        evaluation_strategy: 'epoch'
+        logging_strategy: 'epoch'
+        logging_steps: 'error'
+        log_level: 'error'
+        metric_for_best_model: 'eval_loss'
+        load_best_model_at_end: True
+        remove_unused_columns: False
+        per_device_eval_batch_size: 32 
+        disable_tqdm: False
+
+sweep_config_grid:
+    method: grid
+    sweep_parameters_grid: 
+        epochs: 
+            values: [1, 2, 3]
+        downsampling: 
+            values: [True, False]
+        remove_footer:
+            values : [True, False]
+        remove_emojis:
+            values : [True, False]        
+        learning_rate:
+            values : [0.00001, 0.00002, 0.00003, 0.00005]
+        batch_size: 
+            values: [16, 32] 
+        weight_decay:
+            values: [0.1, 0.2, 0.3] 
+        attention_probs_dropout_prob: 
+            values: [0.0, 0.1, 0.3, 0.5] 
+        hidden_dropout_prob:
+            values: [0.0, 0.1, 0.3, 0.3] 
+    sweep_trainingargs:
+        save_strategy: 'epoch'
+        evaluation_strategy: 'epoch'
+        logging_strategy: 'epoch'
+        logging_steps: 'error'
+        log_level: 'error'
+        metric_for_best_model: 'eval_loss'
+        load_best_model_at_end: True
+        remove_unused_columns: False
+        per_device_eval_batch_size: 32 
+        disable_tqdm: False
+        
